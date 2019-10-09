@@ -10,7 +10,7 @@ Before installation, make sure Python3 + pip are installed
 * cd to\YaraManager\Path
 * .\install.bat
 
-Note - during the installation you'll be promoted to enter a username & a password
+Note - during the installation you'll be prompted to enter a username & a password
 
 Please enter a username in an email convention (user@email.com) - the email does not have to be real
 
