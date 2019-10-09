@@ -28,3 +28,10 @@ Please enter a username in an email convention (user@email.com) - the email does
 * python manage.py makemigrations rule_manager
 * python manage.py migrate
 * (run with -) python manage.py runserver
+
+## Screenshots
+Main view  - rules table + filtering
+![Rules table](README_files/rules_table.png?raw=true "Rules table")
+
+Rule edit page
+![Rule_edit](README_files/rule_edit.png?raw=true "Rule Edit")
