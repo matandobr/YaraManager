@@ -31,7 +31,7 @@ Please enter a username in an email convention (user@email.com) - the email does
 
 ## Screenshots
 Main view  - rules table + filtering
-![Rules table](README_files/rules_table.png?raw=true "Rules table")
+![](README_files/rules_table.PNG?raw=true "")
 
 Rule edit page
-![Rule_edit](README_files/rule_edit.png?raw=true "Rule Edit")
+![](README_files/rule_edit.PNG?raw=true "")
