@@ -1,16 +1,10 @@
-# Django Imports
-from django.db import transaction
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
-# Import Database Classes
+from rule_manager import ruleparser
 from rule_manager.models import Rule, MetaData, RuleStrings, Condition, Category
-
-# Import Rule Parser
-import ruleparser
 
 
 def get_categories():
@@ -43,10 +37,12 @@ def login_page(request):
         error_line = "Unable to login to the Web Panel"
         return redirect('/')
 
+
 # Logout Page
 def logout_page(request):
     logout(request)
     return redirect('/')
+
 
 # Main Page
 def index_view(request):
@@ -72,7 +68,8 @@ def index_view(request):
     except EmptyPage:
         rules = paginator.page(paginator.num_pages)
     return render(request, 'index.html', {'cat_list':cat_list, 'rule_list': rules, 'rule_count':rule_count, 'rules':[first_rule, last_rule]})
-    
+
+
 # Search
 def search(request):
     try:
@@ -97,7 +94,8 @@ def search(request):
         return render(request, 'error.html', {'error': error_line})
             
     return render(request, 'search.html', {'results':results, 'search':{'term':search_word, 'count':len(results)}})
-    
+
+
 # Export
 # this should return a valid yara rule as a .yar
 def export_rule(request, rule_id):
@@ -105,13 +103,15 @@ def export_rule(request, rule_id):
     response = HttpResponse(rule_object, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="{0}.yar"'.format(rule_name)
     return response
-    
+
+
 def export_cat(request, cat_name):
     rule_name, rule_object = ruleparser.create_multi_rule(cat_name)
     response = HttpResponse(rule_object, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="{0}.yar"'.format(rule_name)
     return response
-    
+
+
 # Rules
 def rule_view(request, rule_id):
     try:
@@ -127,6 +127,8 @@ def rule_view(request, rule_id):
         return render(request, 'rule.html', {'rule_details': rule_details, 'meta_list':meta_list, 'string_list': string_list, 'condition': condition, 'string_types':['String', 'Hex', 'RegEx']})
     except Exception as e:
         return render(request, 'error.html', {'error': e})
+
+
 # Update Rules with Post Data
 def post_data(request, add_type):
     """
@@ -136,7 +138,7 @@ def post_data(request, add_type):
 
     """
     # If not authenticated
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         error_line = "You need to be logged in to perform that action"
         return render(request, 'error.html', {'error': error_line})
 
@@ -182,7 +184,7 @@ def post_data(request, add_type):
         meta_db = rule.metadata_set.all()
         for obj in meta_db:
             if obj.id not in meta_save:
-                print "dropping Meta with ID", obj.id
+                print("dropping Meta with ID", obj.id)
                 MetaData.objects.filter(id=obj.id).delete()
         
         # Strings
@@ -216,11 +218,10 @@ def post_data(request, add_type):
         string_db = rule.rulestrings_set.all()
         for obj in string_db:
             if obj.id not in string_save:
-                print "dropping String with ID", obj.id
+                print("dropping String with ID", obj.id)
                 RuleStrings.objects.filter(id=obj.id).delete()            
         
         return redirect('/rule/{0}'.format(rule_id))
-    
 
     # Add Rules
     if add_type == 'addfile':
@@ -232,4 +233,4 @@ def post_data(request, add_type):
             rule_data = rule_file.read()
             ruleparser.split_rules({'rule_data':rule_data, 'rule_source':rule_source, 'rule_category':rule_category})
     return redirect('/')
-            
+

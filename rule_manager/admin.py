@@ -1,6 +1,6 @@
 from django.contrib import admin
-from rule_manager.models import Rule, MetaData, RuleStrings, Condition
 
+from rule_manager.models import Rule, MetaData, RuleStrings, Condition
 
 admin.site.register(Rule)
 admin.site.register(MetaData)

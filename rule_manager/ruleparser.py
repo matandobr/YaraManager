@@ -18,6 +18,8 @@ rule [[name]]
 }
 
 '''
+
+
 def create_single_rule(rule_id):
     #try:
         # get elements
@@ -64,6 +66,7 @@ def create_single_rule(rule_id):
     #except:
         #return "Failed"
 
+
 def create_multi_rule(cat_name):
     final_rule = ''
     
@@ -74,15 +77,18 @@ def create_multi_rule(cat_name):
         final_rule += '{0}'.format(raw)
 
     return cat_name, final_rule
-    
+
+
 # Parse Rules from a file
 def split_rules(rule_dict):
-    print "Running Rules"
-    raw_rules = rule_dict['rule_data']
+    print("Running Rules")
+    # Converting bytes-like object to string
+    raw_rules = rule_dict['rule_data'].decode('utf-8')
     rule_list = re.findall('rule.*?condition:.*?}', raw_rules, re.DOTALL)
     for rule in rule_list:
         process_rule(rule, rule_dict)
-               
+
+
 def process_rule(single_rule, rule_dict):
     # Break a rule down in to sections
     new_rule = Rule()
@@ -97,7 +103,7 @@ def process_rule(single_rule, rule_dict):
     # MetaData
     meta_list = re.findall('meta:(.*)strings:', single_rule, re.DOTALL)
     if len(meta_list) > 0:
-        with transaction.commit_on_success():
+        with transaction.atomic():
             for line in meta_list[0].split('\n'):
                 if '=' in line:
                     meta_lines = line.split('=')
@@ -112,7 +118,7 @@ def process_rule(single_rule, rule_dict):
     # Strings
     string_list = re.findall('strings:(.*)condition:', single_rule, re.DOTALL)
     if len(string_list) > 0:
-        with transaction.commit_on_success():
+        with transaction.atomic():
             for line in string_list[0].split('\n'):
                 if '=' in line:
                     string_type = False
@@ -164,8 +170,7 @@ def process_rule(single_rule, rule_dict):
                                     string_ascii = string_ascii
                                     )
                         rule_strings.save()
-            
-            
+
     # Condition
     condition = re.findall('condition:(.*)}', single_rule, re.DOTALL)
     condition = condition[0].strip()

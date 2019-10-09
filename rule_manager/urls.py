@@ -1,8 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from rule_manager import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Index
     url(r'^$', views.index_view, name='index'),
     
@@ -26,4 +26,4 @@ urlpatterns = patterns('',
     url(r'^export/rule/(?P<rule_id>\d+)/$', views.export_rule, name='export_rule'),
     # By Category
     url(r'^export/category/(?P<cat_name>.+)/$', views.export_cat, name='export_cat'),
-)
+]
